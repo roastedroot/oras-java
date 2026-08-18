@@ -1,67 +1,31 @@
-# ORAS Java
+# ORAS Java SDK (Java 11 Fork)
 
-[![GitHub Workflow Status](https://github.com/oras-project/oras-java/actions/workflows/build.yml/badge.svg)](https://github.com/oras-project/oras-java/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/oras-project/oras-java/branch/main/graph/badge.svg)](https://codecov.io/gh/oras-project/oras-java)
-![GitHub Release](https://img.shields.io/github/v/release/oras-project/oras-java?logo=github&color=green)
-[![GitHub license](https://img.shields.io/github/license/oras-project/oras-java)](https://github.com/oras-project/oras-java/blob/main/LICENSE)
-[![Javadoc](https://img.shields.io/badge/javadoc-latest-blue)](https://oras-project.github.io/oras-java/)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/oras-project/oras-java/badge)](https://scorecard.dev/viewer/?uri=github.com/oras-project/oras-java)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/10047/badge)](https://www.bestpractices.dev/projects/10047)
-[![Reproducible Central Artifact](https://img.shields.io/reproducible-central/artifact/land.oras/oras-java-sdk/0.2.15)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/land/oras/oras-java-sdk/README.md)
+[![Build](https://github.com/roastedroot/oras-java/actions/workflows/build.yml/badge.svg)](https://github.com/roastedroot/oras-java/actions/workflows/build.yml)
 
-
-> [!WARNING]
-> The Oras Java SDK is currently in **alpha** state.
+> **Note:** This is a fork of [oras-project/oras-java](https://github.com/oras-project/oras-java)
+> maintained with **Java 11** compatibility. The upstream project targets Java 17+.
 >
-> It's configuration and APIs might change in future releases
-
-<p align="left">
-<a href="https://oras.land/"><img src="https://oras.land/img/oras.svg" alt="banner" width="200px"></a>
-</p>
+> The Java packages remain `land.oras.*` — you can switch between this fork and
+> upstream by changing only the Maven/Gradle coordinates.
 
 OCI Registry as Storage enables libraries to push OCI Artifacts to [OCI Conformant](https://github.com/opencontainers/oci-conformance) registries. This is a Java SDK for Java developers to empower them to do this in their applications.
 
 ## Consuming SDK
 
-SNAPSHOT for version 0.2.x are published on GitHub Maven packages.
-SNAPSHOT for version 0.3.x and above are published on Maven Central at: https://central.sonatype.com/repository/maven-snapshots/
-
-Releases are published on Maven Central since version 0.2.x.
-
-Javadoc is published from main branch into: https://oras-project.github.io/oras-java/
+### Maven
 
 ```xml
 <dependency>
-    <groupId>land.oras</groupId>
-    <artifactId>oras-java-sdk</artifactId>
+    <groupId>io.roastedroot</groupId>
+    <artifactId>oras-java</artifactId>
     <version>VERSION_HERE</version>
 </dependency>
 ```
 
-### Quarkus
+### Gradle
 
-Quarkus users can use the extension `quarkus-oras` to use the SDK in their applications.
-
-Follow the [Quarkus ORAS documentation](https://docs.quarkiverse.io/quarkus-oras/dev/index.html#) to get started with Quarkus.
-
-### Only for SNAPSHOTS (only for testing)
-
-Then on your `pom.xml`
-
-```xml
-<repositories>
-    <repository>
-        <id>central-snapshots</id>
-        <name>ORAS Maven Central SNAPSHOTS</name>
-        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-    </repository>
-</repositories>
+```groovy
+implementation 'io.roastedroot:oras-java:VERSION_HERE'
 ```
 
 ## Examples
@@ -310,7 +274,7 @@ security decision is evaluated against the **effective (resolved) reference** �
 the reference originally supplied. For each operation the SDK:
 
 1. **Resolves** the reference: short-name / unqualified-search expansion (e.g.
-   `nginx` → `docker.io/library/nginx`), `prefix` → `location` rewrites, and mirror
+   `nginx` -> `docker.io/library/nginx`), `prefix` -> `location` rewrites, and mirror
    selection.
 2. **Evaluates** `blocked`, `insecure` (HTTP vs HTTPS) and the trust policy against
    that resolved reference.
@@ -367,10 +331,10 @@ When a policy is set, every manifest/index pull is evaluated against it and reje
 
 | Type                     | Supported | Behaviour                                                          |
 |--------------------------|-----------|--------------------------------------------------------------------|
-| `insecureAcceptAnything` | ✅        | Accept the image without any verification (trust all).             |
-| `reject`                 | ✅        | Reject the image unconditionally.                                  |
-| `sigstoreSigned`         | ✅        | Accept only images with a valid keyed Sigstore (cosign) signature. |
-| `signedBy` (GPG)         | ❌        | Not implemented. Legacy                                            |
+| `insecureAcceptAnything` | Yes       | Accept the image without any verification (trust all).             |
+| `reject`                 | Yes       | Reject the image unconditionally.                                  |
+| `sigstoreSigned`         | Yes       | Accept only images with a valid keyed Sigstore (cosign) signature. |
+| `signedBy` (GPG)         | No        | Not implemented. Legacy                                            |
 
 ### `sigstoreSigned`
 
@@ -401,19 +365,11 @@ cosign bundle payload carries only the image digest and no claimed Docker refere
 }
 ```
 
-### Deploy SNAPSHOTS
+## Attribution
 
-SNAPSHOTS are automatically deployed when the `main` branch is updated. See the [GitHub Actions](.github/workflows/deploy-snapshots.yml) for more details.
-
-### Perform release
-
-- Ensure the draft release version correspond to the version on the `pom.xml`. Specially if changing the major or minor version. Patch releases are automatically updated.
-- Run the release workflow
-
-## Code of Conduct
-
-Please note that this project has adopted the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
-Please follow it in all your interactions with the project members and users.
+This project is a fork of [oras-project/oras-java](https://github.com/oras-project/oras-java),
+originally created by [Valentin Delaye](https://github.com/jonesbusy) and the ORAS Authors.
+We are grateful to the original contributors for their work on the ORAS Java SDK.
 
 ## License
 

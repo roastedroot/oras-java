@@ -1,86 +1,80 @@
-name: Release
+name: release
 
 on:
   workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'Version being released'
+        required: true
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'main'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  deploy-release:
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
-      packages: write
+
     steps:
-
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
 
-      - name: Read Maven version
-        id: maven-version
-        run: echo "version=$(cat .github/vars/maven-version.txt)" >> $GITHUB_OUTPUT
-
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@ba34de01b7f4ba2ab8e2860df8993a29f4477056 # v1.20.0
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
-          checkout-enabled: false
-          java-distribution: 'temurin'
           java-version: 11
-          maven-version: ${{ steps.maven-version.outputs.version }}
-          cache-enabled: true
-          settings-servers: |
-            [{
-                "id": "central",
-                "username": "${{ secrets.CENTRAL_USERNAME }}",
-                "password": "${{ secrets.CENTRAL_PASSWORD }}"
-            }]
+          distribution: 'temurin'
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.java_gpg_secret_key }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Configure Git
+      - id: install-secret-key
+        name: Install gpg secret key
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config gpg.format openpgp
-          git config commit.gpgsign true
-          git config user.signingkey CB5831CAFA9D8C6AFA9FC9DA67E69853B952BA35
+          cat <(echo -e "${{ secrets.java_gpg_secret_key }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
 
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd # v7.0.0
-        with:
-          gpg_private_key: ${{ secrets.GPG_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      - name: List keys
-        run: gpg -K
+      - name: Install docker-credential-fake
+        run: sudo cp docker-credential-fake /usr/bin/docker-credential-fake
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.RELEASE_SSH_KEY }}
+      - name: Compile
+        run: mvn --batch-mode clean install -DskipTests
 
-      - name: Maven release
-        run: mvn --batch-mode --update-snapshots -Dmaven.resolver.transport=wagon -DskipTests -Darguments="-DskipTests" release:prepare release:perform
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Set the version
+        run: |
+          mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${{ github.event.inputs.release-version }}
+          git add .
+          git commit -m "Release version update ${{ github.event.inputs.release-version }}"
+          git push
+          git tag ${{ github.event.inputs.release-version }}
+          git push origin ${{ github.event.inputs.release-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Finalize release
+      - name: Release to Maven Central
         run: |
-          draft_id=$(gh api /repos/oras-project/oras-java/releases | jq -r '.[] | select(.draft == true) | .id')
-          echo "Draft ID: $draft_id"
-          gh api -X PATCH -F draft=false /repos/oras-project/oras-java/releases/$draft_id
-          release_tag_name=$(gh api /repos/oras-project/oras-java/releases/latest | jq -r '.tag_name')
-          echo "Release tag: $release_tag_name"
-          for file in target/checkout/target/*.jar target/checkout/target/*.jar.asc target/checkout/target/*.jar.sigstore.json; do
-            if [[ -f "$file" ]]; then
-              if [[ "$file" != *javadoc* && "$file" != *sources* && "$file" != *tests* ]]; then
-                echo "Uploading $file"
-                gh release upload "$release_tag_name" "$file" --repo oras-project/oras-java
-              else
-                echo "Skipping $file"
-              fi
-            else
-              echo "Skipping missing file: $file"
-            fi
-          done
+          mvn --batch-mode deploy -Prelease -DskipTests=true
+        env:
+          MAVEN_USERNAME: ${{ secrets.central_username }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.central_password }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.java_gpg_passphrase }}
+
+      - name: Back to Snapshot
+        run: |
+          mvn versions:set -DgenerateBackupPoms=false -DnewVersion=999-SNAPSHOT
+          git add .
+          git commit -m "Snapshot version update"
+          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

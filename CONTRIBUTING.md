@@ -1,14 +1,12 @@
 # Contributing
 
-Please refer to the [ORAS Contributing guide](https://oras.land/docs/community/contributing_guide) for general aspects.
+Thank you for your interest in contributing to the ORAS Java SDK (Java 11 Fork).
 
 ## Java SDK
 
-This section is specific to the Java SDK.
-
 ### Requirements
 
-- Java 17 or later
+- Java 11 or later
 - Maven 3.9.9 or later
 - Container engine like Docker or Podman (due to testcontainers)
 - Pre-commit `3.6.2` or later

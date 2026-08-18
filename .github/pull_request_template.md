@@ -28,5 +28,5 @@
 -->
 
 ### Submitter checklist
-- [ ] I have read and understood the [CONTRIBUTING](https://github.com/oras-project/oras-java/blob/main/CONTRIBUTING.md) guide
+- [ ] I have read and understood the [CONTRIBUTING](https://github.com/roastedroot/oras-java/blob/main/CONTRIBUTING.md) guide
 - [ ] I have run `mvn license:update-file-header`, `mvn spotless:apply`, `pre-commit run -a`, `mvn clean install` before opening the PR

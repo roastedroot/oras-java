@@ -1,3 +1,5 @@
 # Security Policy
 
-Please follow the [security policy](https://oras.land/docs/community/reporting_security_concerns) to report a security vulnerability or concern.
+To report a security vulnerability, please use
+[GitHub Security Advisories](https://github.com/roastedroot/oras-java/security/advisories)
+for this repository.

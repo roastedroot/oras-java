@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>land.oras</groupId>
-  <artifactId>oras-java-sdk</artifactId>
-  <version>0.8.3-SNAPSHOT</version>
+  <groupId>io.roastedroot</groupId>
+  <artifactId>oras-java</artifactId>
+  <version>999-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>${project.groupId}:${project.artifactId}</name>
-  <description>ORAS Java SDK</description>
-  <url>https://github.com/oras-project/oras-java</url>
+  <description>ORAS Java SDK - Java 11 compatible fork</description>
+  <url>https://github.com/roastedroot/oras-java</url>
 
   <licenses>
     <license>
@@ -24,22 +24,20 @@
       <organization>ORAS</organization>
       <organizationUrl>https://oras.land/</organizationUrl>
     </developer>
+    <developer>
+      <id>andreaTP</id>
+      <name>Andrea Peruffo</name>
+      <email>andrea.peruffo1982@gmail.com</email>
+      <organization>IBM</organization>
+    </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:oras-project/oras-java.git</connection>
-    <developerConnection>scm:git:git@github.com:oras-project/oras-java.git</developerConnection>
+    <connection>scm:git:git://github.com/roastedroot/oras-java.git</connection>
+    <developerConnection>scm:git:ssh://github.com:roastedroot/oras-java.git</developerConnection>
     <tag>HEAD</tag>
-    <url>https://github.com/oras-project/oras-java</url>
+    <url>https://github.com/roastedroot/oras-java</url>
   </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>central-snapshots</id>
-      <name>ORAS Maven Central SNAPSHOTS</name>
-      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-    </repository>
-  </distributionManagement>
 
   <properties>
 
@@ -88,11 +86,8 @@
     <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-    <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
     <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
-    <sigstore-maven-plugin.version>2.2.0</sigstore-maven-plugin.version>
-    <spdx-maven-plugin.version>1.0.4</spdx-maven-plugin.version>
     <maven-license-plugin.version>2.7.1</maven-license-plugin.version>
 
     <!-- Target Java 11 -->
@@ -328,20 +323,6 @@
 
   </dependencies>
 
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>apache-snapshots</id>
-      <name>apache-snapshots</name>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-    </repository>
-  </repositories>
-
   <build>
     <pluginManagement>
       <plugins>
@@ -383,19 +364,6 @@
                 <goal>sign</goal>
               </goals>
               <phase>verify</phase>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.spdx</groupId>
-          <artifactId>spdx-maven-plugin</artifactId>
-          <version>${spdx-maven-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>build-spdx</id>
-              <goals>
-                <goal>createSPDX</goal>
-              </goals>
             </execution>
           </executions>
         </plugin>
@@ -537,19 +505,6 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>dev.sigstore</groupId>
-          <artifactId>sigstore-maven-plugin</artifactId>
-          <version>${sigstore-maven-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>sign</id>
-              <goals>
-                <goal>sign</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
           <version>${maven-source-plugin.version}</version>
@@ -562,16 +517,6 @@
               <phase>verify</phase>
             </execution>
           </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>${maven-release-plugin.version}</version>
-          <configuration>
-            <tagNameFormat>@{project.version}</tagNameFormat>
-            <scmCommentPrefix>[ci skip]</scmCommentPrefix>
-            <releaseProfiles>release</releaseProfiles>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -675,10 +620,6 @@
         <artifactId>license-maven-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.spdx</groupId>
-        <artifactId>spdx-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
       </plugin>
@@ -718,15 +659,11 @@
     </profile>
     <profile>
       <id>release</id>
-      <properties>
-        <skipUnitTests>true</skipUnitTests>
-        <skipITs>true</skipITs>
-      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-enforcer-plugin</artifactId>
+            <artifactId>maven-gpg-plugin</artifactId>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -735,53 +672,10 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
           </plugin>
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>dev.sigstore</groupId>
-            <artifactId>sigstore-maven-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>sign</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-enforcer-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>dev.sigstore</groupId>
-            <artifactId>sigstore-maven-plugin</artifactId>
           </plugin>
         </plugins>
       </build>

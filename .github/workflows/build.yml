@@ -3,10 +3,7 @@ name: PR build
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, release/0.2.x]
-  push:
-    branches:
-      - release/0.2.x
+    branches: [main]
 
 permissions:
   contents: read
@@ -54,45 +51,6 @@ jobs:
           checkout-enabled: false
           java-distribution: 'temurin'
           java-version: ${{ matrix.java }}
-          maven-version: ${{ steps.maven-version.outputs.version }}
-          cache-enabled: true
-
-      - name: Maven build
-        run: mvn --batch-mode --update-snapshots verify
-
-      - name: Upload coverage reports to Codecov
-        if: matrix.java == '11'
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
-        with:
-          report_type: coverage
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
-
-      - name: Upload test reports to Codecov
-        if: matrix.java == '11'
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
-        with:
-          report_type: test_results
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
-
-  maven-build-windows:
-    runs-on: windows-latest
-    needs: build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Read Maven version
-        id: maven-version
-        run: echo "version=$(cat .github/vars/maven-version.txt)" >> $env:GITHUB_OUTPUT
-
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@ba34de01b7f4ba2ab8e2860df8993a29f4477056 # v1.20.0
-        with:
-          checkout-enabled: false
-          java-distribution: 'temurin'
-          java-version: 11
           maven-version: ${{ steps.maven-version.outputs.version }}
           cache-enabled: true
 
