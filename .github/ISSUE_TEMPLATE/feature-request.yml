@@ -1,4 +1,4 @@
-# Copyright The ORAS Authors.
+# Copyright The ORAS Authors and roastedroot contributors.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,7 +18,7 @@ body:
   - type: markdown
     id: preface
     attributes:
-      value: "Thank you for submitting new features for ORAS."
+      value: "Thank you for submitting new features for the ORAS Java SDK."
   - type: textarea
     id: description
     attributes:
@@ -28,7 +28,7 @@ body:
   - type: textarea
     id: solution
     attributes:
-      label: "Why is this needed for ORAS?"
+      label: "Why is this needed?"
       description: "Please describe your user story or scenario."
     validations:
       required: true
@@ -36,7 +36,6 @@ body:
     id: idea
     attributes:
       label: "Are you willing to submit PRs to contribute to this feature?"
-      description: "This is absolutely not required, but we are happy to guide you in the contribution process
-        especially when you already have a good proposal or understanding of how to implement it. Join us at https://slack.cncf.io/ and choose #oras channel."
+      description: "This is absolutely not required, but we are happy to guide you in the contribution process."
       options:
         - label: Yes, I am willing to implement it.
