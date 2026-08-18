@@ -1172,7 +1172,6 @@ public final class HttpClient {
         }
 
         /**
-         * >>>>>>> 6379975 (Store token into caffeine cache (#631))
          * Get the effective token
          * @return The effective token, which is either the access_token or the token field depending on which one is present
          */
