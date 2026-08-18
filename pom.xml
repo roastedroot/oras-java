@@ -4,7 +4,7 @@
 
   <groupId>io.roastedroot</groupId>
   <artifactId>oras-java</artifactId>
-  <version>999-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
   <name>${project.groupId}:${project.artifactId}</name>
   <description>ORAS Java SDK - Java 11 compatible fork</description>
@@ -43,7 +43,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <project.build.outputTimestamp>2026-07-29T12:23:52Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2026-08-18T14:25:45Z</project.build.outputTimestamp>
 
     <spotless.check.skip>false</spotless.check.skip>
     <enforcer.skip>false</enforcer.skip>
