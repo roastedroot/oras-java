@@ -620,10 +620,6 @@
         <artifactId>license-maven-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
       </plugin>
@@ -645,13 +641,26 @@
 
   <profiles>
     <profile>
+      <id>spotless</id>
+      <activation>
+        <jdk>[17,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>quick-build</id>
       <properties>
         <skipUnitTests>true</skipUnitTests>
         <skipITs>true</skipITs>
         <enforcer.skip>true</enforcer.skip>
         <license.skipCheckLicense>true</license.skipCheckLicense>
-        <spdx.skip>true</spdx.skip>
         <jacoco.skip>true</jacoco.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <spotless.check.skip>true</spotless.check.skip>
