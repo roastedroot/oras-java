@@ -26,9 +26,8 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
-import java.security.Security;
+import java.security.NoSuchAlgorithmException;
 import land.oras.exception.OrasException;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -37,8 +36,16 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 final class DigestUtils {
 
-    static {
-        Security.addProvider(new BouncyCastleProvider());
+    private static MessageDigest getDigestInstance(String algorithm) {
+        try {
+            return MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new OrasException(
+                    "Unsupported digest algorithm: " + algorithm
+                            + ". You may need to add a security provider (e.g. org.bouncycastle:bcprov-jdk18on)"
+                            + " to your classpath.",
+                    e);
+        }
     }
 
     /**
@@ -55,7 +62,7 @@ final class DigestUtils {
      */
     static String digest(String algorithm, String prefix, Path path) {
         try {
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            MessageDigest digest = getDigestInstance(algorithm);
             try (var channel = FileChannel.open(path, StandardOpenOption.READ)) {
                 long fileSize = channel.size();
                 long position = 0;
@@ -83,7 +90,7 @@ final class DigestUtils {
      */
     static String digest(String algorithm, String prefix, byte[] bytes) {
         try {
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            MessageDigest digest = getDigestInstance(algorithm);
             byte[] hashBytes = digest.digest(bytes);
 
             // Convert the byte array to hex
@@ -102,7 +109,7 @@ final class DigestUtils {
      */
     static String digest(String algorithm, String prefix, InputStream input) {
         try {
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            MessageDigest digest = getDigestInstance(algorithm);
             byte[] buffer = new byte[8192];
             int bytesRead;
             while ((bytesRead = input.read(buffer)) != -1) {

@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.security.Security;
 import land.oras.exception.OrasException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
@@ -36,6 +37,11 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 @Execution(ExecutionMode.CONCURRENT)
 class DigestUtilsTest {
+
+    @BeforeAll
+    static void registerBouncyCastle() {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     /**
      * Blob temporary dir
@@ -126,7 +132,6 @@ class DigestUtilsTest {
 
     @Test
     void testBlake3ByteArray() {
-        Security.addProvider(new BouncyCastleProvider());
         assertEquals(
                 "blake3:ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a67200f",
                 DigestUtils.digest("BLAKE3-256", "blake3", "hello".getBytes()));
