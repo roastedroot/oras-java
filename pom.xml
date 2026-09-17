@@ -52,35 +52,35 @@
     <skipUnitTests>@{skipTests}</skipUnitTests>
 
     <!-- Version -->
-    <slf4j.version>2.0.18</slf4j.version>
+    <slf4j.version>2.0.19</slf4j.version>
     <jspecify.version>1.0.1</jspecify.version>
-    <jackson.version>2.18.3</jackson.version>
+    <jackson.version>2.22.2</jackson.version>
     <apache.common-compress.version>1.28.0</apache.common-compress.version>
-    <zstd-jni.version>1.5.7-13</zstd-jni.version>
-    <bcprov-jdk18on.version>1.85</bcprov-jdk18on.version>
-    <caffeine.version>3.1.8</caffeine.version>
-    <micrometer.version>1.13.12</micrometer.version>
+    <zstd-jni.version>1.5.7-17</zstd-jni.version>
+    <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>
+    <caffeine.version>3.2.4</caffeine.version>
+    <micrometer.version>1.17.1</micrometer.version>
 
     <!-- Test dependencies version -->
-    <logback.version>1.6.2</logback.version>
-    <junit.version>5.11.4</junit.version>
+    <logback.version>1.6.3</logback.version>
+    <junit.version>5.14.4</junit.version>
     <testcontainer.version>1.21.4</testcontainer.version>
     <wiremock.version>3.13.2</wiremock.version>
     <mockito.version>5.23.0</mockito.version>
     <system.stubs.version>2.1.8</system.stubs.version>
-    <classgraph.version>4.8.192</classgraph.version>
+    <classgraph.version>4.8.195</classgraph.version>
     <awaitability.version>4.3.0</awaitability.version>
 
     <!-- Plugin version -->
     <palantir.java.format.version>2.74.0</palantir.java.format.version>
-    <build.helper-maven-plugin.version>3.6.1</build.helper-maven-plugin.version>
+    <build.helper-maven-plugin.version>3.6.2</build.helper-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
-    <spotless-maven-plugin.version>3.9.0</spotless-maven-plugin.version>
-    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+    <spotless-maven-plugin.version>3.10.2</spotless-maven-plugin.version>
+    <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
     <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
-    <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
-    <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.5.6</maven-failsafe-plugin.version>
+    <maven-install-plugin.version>3.2.0</maven-install-plugin.version>
+    <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.6.0</maven-failsafe-plugin.version>
     <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
     <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
     <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
